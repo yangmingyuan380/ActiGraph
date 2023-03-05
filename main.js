@@ -80,9 +80,30 @@ function getDateList(dataList) {
 }
 
 function show() {
-    const chartDom = document.getElementsByClassName("layout__center");
+    const layout = document.getElementsByClassName("layout__center")[0];
+    // 创建一个新的div元素，并给它一个id或类名
+    let newDiv = document.createElement("div");
+    // 为新建的div元素设置id和class属性
+    newDiv.setAttribute('id', 'chart');
+    newDiv.setAttribute('class', 'echarts');
+    newDiv.style.width = "1000px"; 
+    newDiv.style.height = "300px";
+    newDiv.style.border = "solid 1px black";
+    newDiv.style.border = "solid 1px black";
+    // 创建可拉动的边框竖线元素
+    const dividerEl = document.createElement('div');
+    dividerEl.classList.add('chart-divider');
+    newDiv.appendChild(dividerEl);
+    // 设置可拉动的边框竖线样式
+    dividerEl.style.position = 'absolute';
+    dividerEl.style.top = '0';
+    dividerEl.style.bottom = '0';
+    dividerEl.style.width = '4px';
+    dividerEl.style.backgroundColor = '#ccc';
+    dividerEl.style.cursor = 'col-resize';
+    dividerEl.style.zIndex = 2;
     //{locale:'ZH'}：使用echarts的中文编码
-    const myChart = echarts.init(chartDom[0], null, { locale: 'ZH' });
+    const myChart = echarts.init(newDiv, null, { locale: 'ZH' });
     let option;
     option = {
         //鼠标移入图时，通过hover效果显示每一天的日期和活跃度
@@ -102,10 +123,10 @@ function show() {
             left: 'center',
             top: 10,
             pieces: [      // 自定义每一段的范围，以及每一段的文字
-                { gte: 150, color: 'blue' }, // 不指定 max，表示 max 为无限大（Infinity）。
-                { gte: 100, lte: 150, color: 'rgb(98,155,223)' },
-                { gte: 50, lte: 100, color: 'rgb(167,213,255)' },
-                { gte: 1, lte: 50, color: 'rgb(214,233,250)' },
+                { gte: 15, color: 'blue' }, // 不指定 max，表示 max 为无限大（Infinity）。
+                { gte: 5, lte: 10, color: 'rgb(98,155,223)' },
+                { gte: 3, lte: 5, color: 'rgb(167,213,255)' },
+                { gte: 1, lte: 3, color: 'rgb(214,233,250)' },
                 { lte: 0, color: 'rgb(238,238,238)' }],
         },
         calendar: {
@@ -133,17 +154,19 @@ function show() {
             data: []
         }
     };
-  option && myChart.setOption(option);
-  // Show a loading animation
-  myChart.showLoading();
-  // Call getData function and update the chart when data is ready
-  getData().then((data) => {
-    // Hide the loading animation
-    myChart.hideLoading();
-    // Update the option with new data
-    option.series.data = data;
-    // Update the chart with new option
-    myChart.setOption(option);
-  });
+    option && myChart.setOption(option);
+    // 将div元素添加到layout元素中
+    layout.append(newDiv);
+    // Show a loading animation
+    myChart.showLoading();
+    // Call getData function and update the chart when data is ready
+    getData().then((data) => {
+        // Hide the loading animation
+        myChart.hideLoading();
+        // Update the option with new data
+        option.series.data = data;
+        // Update the chart with new option
+        myChart.setOption(option);
+    });
 }
 show()

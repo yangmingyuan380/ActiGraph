@@ -1,5 +1,6 @@
 const echarts = require('echarts');
 const siyuanSql = require('../siyuanApi/siyuanSql')
+const chartCss = require('../css/chartCss')
 // 得到前360天的每个日期
 function getBeforeDate(n) {
     var date = new Date();
@@ -52,13 +53,7 @@ function show() {
     const layout = document.getElementsByClassName("layout__center")[0];
     // 创建一个新的div元素，并给它一个id或类名
     let newDiv = document.createElement("div");
-    // 为新建的div元素设置id和class属性
-    newDiv.setAttribute('id', 'chart');
-    newDiv.setAttribute('class', 'echarts');
-    newDiv.style.width = "1000px"; 
-    newDiv.style.height = "300px";
-    newDiv.style.border = "solid 1px black";
-    newDiv.style.border = "solid 1px black";
+    chartCss.setcss(newDiv)
     //{locale:'ZH'}：使用echarts的中文编码
     const myChart = echarts.init(newDiv, null, { locale: 'ZH' });
     let option;

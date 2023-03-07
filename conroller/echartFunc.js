@@ -49,10 +49,7 @@ function getDateList(dataList) {
     return result;
 }
 
-function show() {
-    const layout = document.getElementsByClassName("layout__center")[0];
-    // 创建一个新的div元素，并给它一个id或类名
-    let newDiv = document.createElement("div");
+function show(newDiv) {
     chartCss.setcss(newDiv)
     //{locale:'ZH'}：使用echarts的中文编码
     const myChart = echarts.init(newDiv, null, { locale: 'ZH' });
@@ -107,8 +104,7 @@ function show() {
         }
     };
     option && myChart.setOption(option);
-    // 将div元素添加到layout元素中
-    layout.append(newDiv);
+    
     myChart.showLoading();
     siyuanSql.getData().then((data) => {
         myChart.hideLoading();

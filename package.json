@@ -3,7 +3,8 @@
     "build": "webpack"
   },
   "dependencies": {
-    "echarts": "^5.4.1"
+    "echarts": "^5.4.1",
+    "siyuan": "^0.3.12"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",

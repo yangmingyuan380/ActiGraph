@@ -40,5 +40,9 @@ status = os.system(f"{cmd} -c 'yarn run build'")
 if status == 0:
   print("打包成功")
   insertContent()
+  path = "/mnt/d/jetaime/softdocument/siyuanWokerSpace"
+  source = path+"/software/data/plugins/mytest/main.js"
+  target = path+"/code/data/plugins/mytest/main.js"
+  shutil.copyfile(source, target)
 else:
   print("Command failed with status code:", status)

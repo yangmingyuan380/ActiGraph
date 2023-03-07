@@ -1,37 +1,30 @@
 const echarts = require('echarts');
 const siyuanSql = require('../siyuanApi/siyuanSql')
 const chartCss = require('../css/chartCss')
-// 得到前360天的每个日期
-function getBeforeDate(n) {
-    var date = new Date();
-    var year, month, day;
-    date.setDate(date.getDate() - n);
-    year = date.getFullYear();
-    month = date.getMonth() + 1;
-    day = date.getDate();
-    return year + '-' + (month < 10 ? ('0' + month) : month) + '-' + (day < 10 ? ('0' + day) : day);
-}
 
-function getDateList(dataList) {
+
+function getDateList(dataList,year) {
     // 定义一个结果数组
     let result = [];
 
     // 定义一个对象或Map来存储每个日期在结果数组中的索引
     let indexMap = {};
 
-    // 获取当前日期
-    let today = new Date();
-
+    let firstDay = new Date(year, 0, 1);
+    let lastDay = new Date(year, 11, 31);
+    let currentDay = firstDay;
+    let i = 0;
     // 遍历前360天，将每个日期添加到结果数组和索引对象或Map中
-    for (let i = 0; i <= 360; i++) {
-        // 获取前i天的日期字符串，例如"2023-02-01"
-        let dateStr = new Date(today.getTime() - i * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-
+    while (currentDay<=lastDay) {
+        // 获取日期字符串，例如"2023-02-01"
+        let dateStr = currentDay.getFullYear() + "-" + (currentDay.getMonth() + 1) + "-" + currentDay.getDate();
         // 将日期字符串和初始值0作为一个元素添加到结果数组中
         result.push([dateStr, 0]);
-
         // 将日期字符串和对应的索引添加到索引对象或Map中
         indexMap[dateStr] = i;
+        i++;
+        // currentDay 天数加1
+        currentDay.setDate(currentDay.getDate() + 1);
     }
     // 遍历数据列表，将每个对象的created属性值转换为日期格式，并更新结果数组中对应元素的第二个值
     for (let obj of dataList) {
@@ -49,7 +42,8 @@ function getDateList(dataList) {
     return result;
 }
 
-function show(newDiv) {
+function show(newDiv,year) {
+    console.log('year:',year)
     chartCss.setcss(newDiv)
     //{locale:'ZH'}：使用echarts的中文编码
     const myChart = echarts.init(newDiv, null, { locale: 'ZH' });
@@ -86,7 +80,7 @@ function show(newDiv) {
             height: 115,
             cellSize: 25,
             splitLine: false,
-            range: [getBeforeDate(365), getBeforeDate(0)],
+            range: [new Date(year, 0, 1), new Date(year, 11, 31)],
             itemStyle: {
                 borderWidth: 0.5,
                 borderColor: 'black',
@@ -106,9 +100,9 @@ function show(newDiv) {
     option && myChart.setOption(option);
     
     myChart.showLoading();
-    siyuanSql.getData().then((data) => {
+    siyuanSql.getData(year).then((data) => {
         myChart.hideLoading();
-        option.series.data = getDateList(data);
+        option.series.data = getDateList(data,year);
         myChart.setOption(option);
     });
 }

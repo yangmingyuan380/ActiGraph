@@ -10,20 +10,24 @@ if(siyuan){
           </div>
         </div>
         `,
-        width: '90vw',
-        height: '70vh',
+        width: '70vw',
+        height: '50vh',
     });
     setTimeout(() => {
+        // 年份选择器
         let selectEl = document.getElementById('plugin-chartyear');
         var currentYear = new Date().getFullYear();
-        let defultOption = new Option(2022, 2022, true);
-        selectEl.add(defultOption);
-        for (var i = 1900; i < currentYear; i++) {
+        let defultOption = new Option(currentYear, currentYear, true);
+        selectEl.add(defultOption); // 默认选择
+        // 选择器添加选项
+        for (var i = 2000; i < currentYear; i++) {
             let newOption = new Option(i, i);
             selectEl.add(newOption);
         }
         let chartEl = document.getElementById('plugin-chart');
         echartFunc.show(chartEl,selectEl.value);
-        // selectEl.onselect = echartFunc.show(chartEl,selectEl.value);
+        selectEl.onchange = ()=>{
+            echartFunc.show(chartEl,selectEl.value);
+        }
     })
 }

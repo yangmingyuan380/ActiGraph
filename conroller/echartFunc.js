@@ -2,7 +2,24 @@ const echarts = require('echarts');
 const siyuanSql = require('../siyuanApi/siyuanSql')
 const chartCss = require('../css/chartCss')
 
-
+// 将日期转换为字符串格式
+function dateToStr(currentDay){
+    let str = currentDay.getFullYear() + "-";
+    let month = currentDay.getMonth()+1;
+    let day = currentDay.getDate();
+    if(month<10){
+        str += "0"+month;
+    }else{
+        str += month;
+    }
+    str += "-";
+    if(day<10){
+        str += "0"+day;
+    }else{
+        str += day;
+    }
+    return str;
+}
 function getDateList(dataList,year) {
     // 定义一个结果数组
     let result = [];
@@ -17,7 +34,7 @@ function getDateList(dataList,year) {
     // 遍历前360天，将每个日期添加到结果数组和索引对象或Map中
     while (currentDay<=lastDay) {
         // 获取日期字符串，例如"2023-02-01"
-        let dateStr = currentDay.getFullYear() + "-" + (currentDay.getMonth() + 1) + "-" + currentDay.getDate();
+        let dateStr = dateToStr(currentDay);
         // 将日期字符串和初始值0作为一个元素添加到结果数组中
         result.push([dateStr, 0]);
         // 将日期字符串和对应的索引添加到索引对象或Map中
@@ -39,6 +56,7 @@ function getDateList(dataList,year) {
             result[index][1]++;
         }
     }
+    console.log("结果：",result)
     return result;
 }
 
